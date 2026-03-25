@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>VDM WEB</title>
+    <title>8‑BIT DESKTOP — VADIM APONCHUK</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         * {
@@ -12,11 +12,16 @@
             image-rendering: pixelated;
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><polygon points="2,2 14,2 14,14 2,14" fill="black" stroke="white" stroke-width="1"/><polygon points="3,3 13,3 13,13 3,13" fill="white"/></svg>') 2 2, auto;
         }
+        /* Telegram WebView fix: используем % вместо vh */
+        html {
+            height: 100%;
+            overflow: hidden;
+        }
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            width: 100vw;
+            height: 100%;
+            width: 100%;
             overflow: hidden;
             font-family: 'Press Start 2P', monospace;
             background: #0a2f3a;
@@ -345,16 +350,16 @@
         /* ========== МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
         @media (max-width: 640px) {
             /* иконки */
-            .desktop-icons-left  { top: 8px; left: 6px; gap: 12px; }
-            .desktop-icons-right { top: 8px; right: 6px; }
+            .desktop-icons-left  { top: 10px; left: 8px; gap: 12px; }
+            .desktop-icons-right { top: 10px; right: 8px; }
             .desktop-icon        { width: 60px; padding: 2px; }
             .icon-img            { width: 32px; height: 32px; }
             .icon-label          { font-size: 6px; padding: 2px 4px; margin-top: 3px; letter-spacing: 0; }
 
-            /* все окна: полная ширина */
+            /* все окна: отступ 14px с каждой стороны */
             .window {
-                width: calc(100vw - 16px) !important;
-                left: 8px !important;
+                width: calc(100% - 28px) !important;
+                left: 14px !important;
                 min-width: unset !important;
                 box-shadow: 4px 4px 0 #2b2b2b;
             }
@@ -380,6 +385,17 @@
             /* полноэкранный плеер */
             .fullscreen-content { max-width: 99%; }
             .close-fullscreen   { top: 6px; right: 6px; font-size: 9px; padding: 5px 9px; }
+
+            /* уведомление: компактное и отцентрированное */
+            .retro-toast {
+                font-size: 8px;
+                padding: 8px 14px;
+                white-space: normal;
+                text-align: center;
+                max-width: 78%;
+                left: 50%;
+                transform: translateX(-50%);
+            }
         }
     </style>
 </head>
@@ -499,6 +515,7 @@
                 <div class="contact-name">VADIM APONCHUK</div>
                 <div class="contact-email" id="contactEmail">vadimaponchuk01@gmail.com</div>
                 <button class="big-mail-btn" id="copyEmailBtn">📧 НАПИСАТЬ НА ПОЧТУ</button>
+                <a class="big-mail-btn" href="https://t.me/vadim779100" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:block;">✈️ НАПИСАТЬ В TELEGRAM</a>
             </div>
         </div>
     </div>
@@ -934,11 +951,11 @@
 
     // ========== МОБИЛЬНАЯ ИНИЦИАЛИЗАЦИЯ ==========
     if (window.innerWidth <= 640) {
-        // Окна при старте: перемещаем в видимую зону
-        const mobileW = (window.innerWidth - 16) + 'px';
+        const pad = 14;
+        const mobileW = (window.innerWidth - pad * 2) + 'px';
         document.querySelectorAll('.window').forEach(w => {
             w.style.width = mobileW;
-            w.style.left  = '8px';
+            w.style.left  = pad + 'px';
         });
         contactWin.style.top    = '90px';
         contactWin.style.height = 'auto';
