@@ -313,12 +313,6 @@
             70%  { opacity: 1; }
             100% { opacity: 0; bottom: 80px; visibility: hidden; }
         }
-        /* ---- iframe: сброс глобального cursor и pointer-events ---- */
-        iframe {
-            pointer-events: auto !important;
-            cursor: auto !important;
-            user-select: auto !important;
-        }
     </style>
 </head>
 <body>
@@ -371,7 +365,7 @@
                 <rect x="0" y="0" width="10" height="1" fill="#c8c870"/>
                 <rect x="0" y="0" width="1" height="16" fill="#c8c870"/>
             </svg>
-            <div class="icon-label">README</div>
+            <div class="icon-label">readme.me</div>
         </div>
         <div class="desktop-icon" data-window="links-txt-window">
             <!-- пиксельная иконка ССЫЛКИ -->
@@ -387,7 +381,7 @@
                 <rect x="0" y="0" width="10" height="1" fill="#6699cc"/>
                 <rect x="0" y="0" width="1" height="16" fill="#6699cc"/>
             </svg>
-            <div class="icon-label">ССЫЛКИ</div>
+            <div class="icon-label">ссылки.txt</div>
         </div>
     </div>
 
@@ -503,12 +497,13 @@
         photoList: [
             'images/khan.jpg'
         ],
-        youtubeList: [
-            { title: 'CAESAR TIKTOK',      id: 'oMG0DuxJXpo' },
-            { title: 'CHINGISKHAN TIKTOK', id: '3wv8xSH3HTE' },
-            { title: 'AVOCADO SHORT',      id: 'avBGQffn6q4' },
-            { title: 'PRESIDENTS SHORT',   id: 'BZQUZGJEEe4' },
-            { title: 'PLATINA STORY',      id: 'jaFkk_czE0A' }
+        videoList: [
+            'videos/cesar_tiktok.mp4',
+            'videos/chingiskhan_tiktok.mp4',
+            'videos/minecraft_presidents.mp4',
+            'videos/napoleon_tiktok.mp4',
+            'videos/platina_story.mp4',
+            'videos/teens_presidents.mp4'
         ],
         bgVideo: 'videos/bg_loop.mp4',
         email: 'vadimaponchuk01@gmail.com'
@@ -578,71 +573,6 @@
         });
     }
 
-    // ========== YOUTUBE ПЛЕЕР ==========
-    function openYouTube(videoId, title) {
-        const overlay = document.createElement('div');
-        overlay.className = 'fullscreen-media';
-
-        // Ретро-окно
-        const win = document.createElement('div');
-        win.style.cssText = [
-            'width: min(360px, 90vw)',
-            'background: #b0b0b0',
-            'border: 4px solid',
-            'border-color: #fff #5a5a5a #5a5a5a #fff',
-            'box-shadow: 8px 8px 0 #2b2b2b',
-            'display: flex',
-            'flex-direction: column',
-            'overflow: hidden'
-        ].join(';');
-
-        // Шапка окна
-        const titleBar = document.createElement('div');
-        titleBar.style.cssText = [
-            'background: #000084',
-            'color: white',
-            'padding: 6px 10px',
-            'font-family: \'Press Start 2P\', monospace',
-            'font-size: 10px',
-            'display: flex',
-            'justify-content: space-between',
-            'align-items: center',
-            'gap: 8px'
-        ].join(';');
-        const titleSpan = document.createElement('span');
-        titleSpan.innerText = '▶ ' + title;
-        titleSpan.style.overflow = 'hidden';
-        titleSpan.style.textOverflow = 'ellipsis';
-        titleSpan.style.whiteSpace = 'nowrap';
-        const closeX = document.createElement('button');
-        closeX.innerText = '✖';
-        closeX.style.cssText = 'background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;width:24px;height:24px;font-size:12px;cursor:pointer;flex-shrink:0;font-family:monospace;padding:0;';
-        closeX.onclick = () => overlay.remove();
-        titleBar.appendChild(titleSpan);
-        titleBar.appendChild(closeX);
-
-        // Обёртка под iframe 9:16
-        const iframeWrap = document.createElement('div');
-        iframeWrap.style.cssText = 'position:relative;width:100%;aspect-ratio:9/16;background:#000;';
-        const iframe = document.createElement('iframe');
-        iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&mute=1&enablejsapi=1&rel=0&playsinline=1';
-        iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-        iframe.setAttribute('allowfullscreen', '');
-        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-popups allow-forms');
-        iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;display:block;pointer-events:auto;cursor:auto;';
-        iframeWrap.appendChild(iframe);
-
-        win.appendChild(titleBar);
-        win.appendChild(iframeWrap);
-        overlay.appendChild(win);
-        document.body.appendChild(overlay);
-
-        overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
-        document.addEventListener('keydown', function escYT(e) {
-            if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', escYT); }
-        });
-    }
-
     // ========== SVG ИКОНКИ ДЛЯ ФАЙЛОВ ==========
     function photoIcon() {
         return `<svg class="file-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -686,17 +616,18 @@
     function populateVideoFolder() {
         const container = document.getElementById('video-list');
         container.innerHTML = '';
-        CONFIG.youtubeList.forEach(({ title, id }) => {
+        CONFIG.videoList.forEach(path => {
+            const fileName = path.split('/').pop();
             const li = document.createElement('li');
             li.className = 'file-item';
-            li.innerHTML = `${videoIcon()}<span>${title}</span>`;
+            li.innerHTML = `${videoIcon()}<span>${fileName}</span>`;
             li.addEventListener('click', (e) => {
                 e.stopPropagation();
-                openYouTube(id, title);
+                openFullscreenMedia(path, 'video');
             });
             container.appendChild(li);
         });
-        if (CONFIG.youtubeList.length === 0) {
+        if (CONFIG.videoList.length === 0) {
             container.innerHTML = '<li class="file-item">⚠️ НЕТ ВИДЕО</li>';
         }
     }
