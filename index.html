@@ -472,8 +472,10 @@
         tg:    'https://t.me/vadim779100'
     };
 
-    // фоновое видео: только обработка ошибки (src вшит в HTML)
-    document.getElementById('bgVideo').addEventListener('error', function() {
+    // фоновое видео: слоумо (0.5x) и обработка ошибки
+    const bgVid = document.getElementById('bgVideo');
+    bgVid.playbackRate = 0.5;
+    bgVid.addEventListener('error', function() {
         this.style.display = 'none';
     });
 
