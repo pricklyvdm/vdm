@@ -32,6 +32,26 @@
             pointer-events: none;
             transform: scale(1.08);
             transform-origin: center center;
+            filter: contrast(1.4) saturate(0.4) brightness(0.6);
+        }
+        /* ---- пиксельная сетка поверх видео ---- */
+        #bgOverlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px,
+                    transparent 1px, transparent 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.10) 0px, rgba(0,0,0,0.10) 1px,
+                    transparent 1px, transparent 4px
+                );
         }
         .desktop {
             position: relative;
@@ -315,26 +335,6 @@
             70%  { opacity: 1; }
             100% { opacity: 0; bottom: 80px; visibility: hidden; }
         }
-        /* ---- антигравитация: плавающие иконки ---- */
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0px); }
-            50%       { transform: translateY(-10px); }
-        }
-        .desktop-icons-left .desktop-icon:nth-child(1) {
-            animation: floatIcon 3.6s ease-in-out infinite;
-        }
-        .desktop-icons-left .desktop-icon:nth-child(2) {
-            animation: floatIcon 3.9s ease-in-out infinite 0.8s;
-        }
-        .desktop-icons-left .desktop-icon:nth-child(3) {
-            animation: floatIcon 4.2s ease-in-out infinite 1.5s;
-        }
-        .desktop-icons-left .desktop-icon:nth-child(4) {
-            animation: floatIcon 3.7s ease-in-out infinite 2.3s;
-        }
-        .desktop-icons-right .desktop-icon {
-            animation: floatIcon 4.0s ease-in-out infinite 1.1s;
-        }
         /* ---- iframe: сброс глобального cursor и pointer-events ---- */
         iframe {
             pointer-events: auto !important;
@@ -347,6 +347,8 @@
 
 <!-- ФОНОВОЕ ВИДЕО -->
 <video id="bgVideo" autoplay loop muted playsinline src="contact/bg_video.mp4"></video>
+<!-- ПИКСЕЛЬНЫЙ ОВЕРЛЕЙ -->
+<div id="bgOverlay"></div>
 
 <div class="desktop" id="desktop">
 
